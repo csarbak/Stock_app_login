@@ -2,6 +2,17 @@ import logo from './logo.svg';
 import './App.css';
 
 function App() {
+
+  fetch('api/')
+      .then((res) => {
+      console.log(res);
+        return res;
+      })
+      .then((data) => {
+        console.log(data);
+      });
+  
+      console.log(fetch('api/'));
   return (
     <div className="App">
       <header className="App-header">

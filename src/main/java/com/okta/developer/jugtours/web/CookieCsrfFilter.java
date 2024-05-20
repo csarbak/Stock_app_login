@@ -1,6 +1,4 @@
-package com.auth0.example;
-
-import jakarta.servlet.Filter;
+package com.okta.developer.jugtours.web;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

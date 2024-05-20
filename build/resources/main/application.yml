@@ -1,5 +1,5 @@
 server:
-  port: 3000
+  port: 8080
 
 logging:
   level:
@@ -10,5 +10,5 @@ logging:
 okta:
   oauth2:
     issuer: https://dev-xy61rbmxg76xol15.us.auth0.com/
-    client-id: JXidj6B6olgGJ4bMhq1gHeb1jwWgkR57
-    client-secret: HuL8rUqw_L_08l7iREStEzY3yZQPahGfBy2ijulZFKziRduZa8h2TqIlWpCwl4X0
+    client-id: EoNPryFqreuCdHgLKjStOZPzGjZm0ASq
+    client-secret: d5s8crVw01inM0KS17a2pQaUm68eUtxVnFFTRlQgozqMfGJO9zcEVHaKLKcOTP07

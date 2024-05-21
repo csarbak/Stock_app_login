@@ -1,24 +1,52 @@
 package com.okta.developer.jugtours.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 
-@Data
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "users")
 public class User {
 
-    public User(){
-    }
-    public User(String id, String name, String email){
-        this.id=id;
-        this.name=name;
-        this.email=email;
-    }
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
+    @Column(name = "name")
     private String name;
-    private String email;
+
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            },
+            mappedBy = "users")
+    @JsonIgnore
+    private Set<Stock> stocks = new HashSet<>();
+
+    public User() {
+
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Set<Stock> getStocks() {
+        return stocks;
+    }
+
+    public void setStocks(Set<Stock> stocks) {
+        this.stocks = stocks;
+    }
 }

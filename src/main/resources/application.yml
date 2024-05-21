@@ -12,3 +12,22 @@ okta:
     issuer: https://dev-xy61rbmxg76xol15.us.auth0.com/
     client-id: EoNPryFqreuCdHgLKjStOZPzGjZm0ASq
     client-secret: d5s8crVw01inM0KS17a2pQaUm68eUtxVnFFTRlQgozqMfGJO9zcEVHaKLKcOTP07
+
+
+spring:
+  datasource:
+    driverClassName: org.h2.Driver
+    password: ''
+    url: jdbc:h2:mem:testdb
+    username: sa
+  h2:
+    console:
+      enabled: true
+      path: /h2-ui
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+    show-sql: true

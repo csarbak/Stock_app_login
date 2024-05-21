@@ -1,40 +1,34 @@
 package com.okta.developer.jugtours.config;
 
-import com.okta.developer.jugtours.model.Event;
-import com.okta.developer.jugtours.model.Group;
-import com.okta.developer.jugtours.model.GroupRepository;
+import com.okta.developer.jugtours.model.Stock;
+import com.okta.developer.jugtours.model.StockRepository;
+import com.okta.developer.jugtours.model.User;
+import com.okta.developer.jugtours.model.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import java.time.Instant;
-import java.util.Collections;
 import java.util.stream.Stream;
 
 @Component
 class Initializer implements CommandLineRunner {
 
-    private final GroupRepository repository;
+    private final StockRepository repository;
+    private final UserRepository userRepository;
 
-    public Initializer(GroupRepository repository) {
+    public Initializer(StockRepository repository, UserRepository userRepository) {
         this.repository = repository;
+        this.userRepository=userRepository;
     }
 
     @Override
     public void run(String... strings) {
         Stream.of("Seattle JUG", "Denver JUG", "Dublin JUG",
-                "London JUG").forEach(name ->
-                repository.save(new Group(name))
-        );
-
-        Group djug = repository.findByName("Seattle JUG");
-//        Event e = Event.builder().title("Micro Frontends for Java Developers")
-//                .description("JHipster now has microfrontend support!")
-//                .date(Instant.parse("2022-09-13T17:00:00.000Z"))
-//                .build();
-        Event e = new Event(Instant.parse("2022-09-13T17:00:00.000Z"),"Micro Frontends for Java Developers", "JHipster now has microfrontend support!" );
-        djug.setEvents(Collections.singleton(e));
-        repository.save(djug);
-
+                "London JUG").forEach(name->{
+            Stock stock = new Stock();
+            stock.setTitle(name);
+            stock.addUser(new User());
+            repository.save(stock);
+        });
         repository.findAll().forEach(System.out::println);
     }
 }

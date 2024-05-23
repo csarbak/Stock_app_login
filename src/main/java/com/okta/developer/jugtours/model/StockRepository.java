@@ -9,5 +9,5 @@ public interface StockRepository extends JpaRepository<Stock, Long> {
 
     List<Stock> findByTitleContaining(String title);
 
-    List<Stock> findStocksByUsersId(Long userId);
+    List<Stock> findStocksByUsersId(String userId);
 }

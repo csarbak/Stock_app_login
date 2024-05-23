@@ -52,7 +52,7 @@ const Home = () => {
 
   const button = authenticated ?
     <div>
-      <Button color="link"><Link to="/groups">Manage JUG Tour</Link></Button>
+      <Button color="link"><Link to="/stocks">Manage JUG Tour</Link></Button>
       <br/>
       <Button color="link" onClick={logout}>Logout</Button>
     </div> :

@@ -18,6 +18,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.Principal;
 import java.util.Collection;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -39,16 +40,25 @@ class StockController {
     @GetMapping("/stocks")
     Collection<Stock> stocks(Principal principal) {
         System.out.println("Prinple: " + principal.toString());
-        return stockRepository.findAll();
+        //return stockRepository.findAll();
         //return userRepository.findAll();
         //System.out.println("Prinple Name(ID): " + principal.getName());
         //return stockRepository.findStocksByBuyersId(principal.getName());
+        return stockRepository.findStocksByUsersId(principal.getName());
     }
     @GetMapping("/users")
     Collection<User> users(Principal principal) {
         System.out.println("Prinple: " + principal.toString());
         //return stockRepository.findAll();
         return userRepository.findAll();
+        //System.out.println("Prinple Name(ID): " + principal.getName());
+        //return stockRepository.findStocksByBuyersId(principal.getName());
+    }
+    @GetMapping("/list")
+    Collection<Stock> list(Principal principal) {
+        System.out.println("Prinple: " + principal.toString());
+        return stockRepository.findAll();
+        //return stockRepository.findStocksByUsersId("test");
         //System.out.println("Prinple Name(ID): " + principal.getName());
         //return stockRepository.findStocksByBuyersId(principal.getName());
     }
@@ -63,13 +73,21 @@ class StockController {
     ResponseEntity<Stock> createStock(@Valid @RequestBody Stock stock,
                                       @AuthenticationPrincipal OAuth2User principal) throws URISyntaxException {
         log.info("Request to create stock: {}", stock);
-//        Map<String, Object> details = principal.getAttributes();
-//        String userId = details.get("sub").toString();
+        Map<String, Object> details = principal.getAttributes();
+        String userId = details.get("sub").toString();
 
-        // check to see if user already exists
+        // check to see if user already exists CHANGE HERE TO SEE IF USERS EXIST ALREADY
+
 //        Optional<User> user = userRepository.findById(userId);
 //        stock.setUser(user.orElse(new User(userId,
 //            details.get("name").toString(), details.get("email").toString())));
+          Optional<User> user = userRepository.findById(userId);
+          stock.addUser(user
+                  .orElseGet(() -> {
+                      User c = new User();
+                      c.setId(userId);
+                      return c;
+                  }));
 
         Stock result = stockRepository.save(stock);
         return ResponseEntity.created(new URI("/api/stock/" + result.getId()))
@@ -79,6 +97,12 @@ class StockController {
     @PutMapping("/stock/{id}")
     ResponseEntity<Stock> updateStock(@Valid @RequestBody Stock stock) {
         log.info("Request to update stock: {}", stock);
+        //Check to see if all users are valid and remove ones not
+        for( User u : stock.getUsers()){
+            if(u.getId().isEmpty() || u.getId().isBlank() || u.getId()==null){
+                stock.removeUser(u);
+            }
+        }
         Stock result = stockRepository.save(stock);
         return ResponseEntity.ok().body(result);
     }

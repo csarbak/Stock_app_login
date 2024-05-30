@@ -34,7 +34,8 @@ public class Stock {
     @ManyToMany(fetch = FetchType.LAZY, cascade = {
 //            CascadeType.PERSIST,
 //            CascadeType.MERGE
-                CascadeType.ALL })
+                CascadeType.ALL
+    })
     @JoinTable(name = "stock_users", joinColumns = { @JoinColumn(name = "stock_id") }, inverseJoinColumns = {
             @JoinColumn(name = "user_id") })
     private Set<User> users = new HashSet<>();
@@ -126,5 +127,18 @@ public class Stock {
 
     public void setLogo(String logo) {
         this.logo = logo;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Stock)) return false;
+        Stock stock = (Stock) o;
+        return getId() == stock.getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
     }
 }

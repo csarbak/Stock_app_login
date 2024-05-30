@@ -73,7 +73,7 @@ const StockList = () => {
         <div className="float-end">
           <Button color="success" tag={Link} to="/stocks/new">Add Stock</Button>
         </div>
-        <h3>My JUG Tour</h3>
+        <h3>My Stocks</h3>
         <Table className="mt-4">
           <thead>
           <tr>

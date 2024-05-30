@@ -1,7 +1,9 @@
 package com.okta.developer.jugtours.model;
 
-import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -18,6 +20,9 @@ public class User {
 
     @Column(name = "email")
     private String email;
+
+    @Column(name = "maxPrice")
+    private BigDecimal maxPrice;
 
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {
@@ -62,5 +67,13 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public BigDecimal getMaxPrice() {
+        return maxPrice;
+    }
+
+    public void setMaxPrice(BigDecimal maxPrice) {
+        this.maxPrice = maxPrice;
     }
 }

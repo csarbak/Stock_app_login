@@ -38,29 +38,26 @@ class StockController {
     }
 
     @GetMapping("/stocks")
-    Collection<Stock> stocks(Principal principal) {
-        System.out.println("Prinple: " + principal.toString());
+    Collection<Stock> Stocks(Principal principal) {
+        //System.out.println("Prinple from stockController: " + principal.toString());
         //return stockRepository.findAll();
         //return userRepository.findAll();
         //System.out.println("Prinple Name(ID): " + principal.getName());
-        //return stockRepository.findStocksByBuyersId(principal.getName());
         return stockRepository.findStocksByUsersId(principal.getName());
     }
-    @GetMapping("/users")
-    Collection<User> users(Principal principal) {
-        System.out.println("Prinple: " + principal.toString());
-        //return stockRepository.findAll();
-        return userRepository.findAll();
-        //System.out.println("Prinple Name(ID): " + principal.getName());
-        //return stockRepository.findStocksByBuyersId(principal.getName());
-    }
-    @GetMapping("/list")
+
+    @GetMapping("/browse")
     Collection<Stock> list(Principal principal) {
-        System.out.println("Prinple: " + principal.toString());
-        return stockRepository.findAll();
-        //return stockRepository.findStocksByUsersId("test");
-        //System.out.println("Prinple Name(ID): " + principal.getName());
-        //return stockRepository.findStocksByBuyersId(principal.getName());
+
+        String userId = principal.getName();
+        //Change here, find stocks user does not own
+        Collection<Stock> allStocks = stockRepository.findAll();
+        Collection<Stock> stocksOwnedByUser = stockRepository.findStocksByUsersId(userId);
+        allStocks.removeAll(stocksOwnedByUser);
+
+        System.out.println("browse : " + allStocks);
+        return allStocks;
+
     }
     @GetMapping("/stock/{id}")
     ResponseEntity<?> getStock(@PathVariable Long id) {
@@ -97,6 +94,31 @@ class StockController {
     @PutMapping("/stock/{id}")
     ResponseEntity<Stock> updateStock(@Valid @RequestBody Stock stock) {
         log.info("Request to update stock: {}", stock);
+        //Check to see if all users are valid and remove ones not
+        for( User u : stock.getUsers()){
+            if(u.getId().isEmpty() || u.getId().isBlank() || u.getId()==null){
+                stock.removeUser(u);
+            }
+        }
+        Stock result = stockRepository.save(stock);
+        return ResponseEntity.ok().body(result);
+    }
+
+    @PutMapping("/addUserToStock/{id}")
+    ResponseEntity<Stock> addUserToStock(@Valid @RequestBody Stock stock,@AuthenticationPrincipal OAuth2User principal) {
+        log.info("Request to update stock: {}", stock);
+
+
+        Map<String, Object> details = principal.getAttributes();
+        String userId = details.get("sub").toString();
+
+        Optional<User> user = userRepository.findById(userId);
+        stock.addUser(user
+                .orElseGet(() -> {
+                    User c = new User();
+                    c.setId(userId);
+                    return c;
+                }));
         //Check to see if all users are valid and remove ones not
         for( User u : stock.getUsers()){
             if(u.getId().isEmpty() || u.getId().isBlank() || u.getId()==null){

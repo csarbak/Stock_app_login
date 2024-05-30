@@ -52,7 +52,13 @@ const Home = () => {
 
   const button = authenticated ?
     <div>
-      <Button color="link"><Link to="/stocks">Manage JUG Tour</Link></Button>
+      <Button color="link"><Link to="/stocks">Stocks</Link></Button>
+      <br/>
+      <Button color="link"><Link to="/user">Settings</Link></Button>
+      <br/>
+      <Button color="link"><Link to="/browse">Browse Stocks</Link></Button>
+      <br/>
+      <Button color="link"><Link to="/tinder">tinder</Link></Button>
       <br/>
       <Button color="link" onClick={logout}>Logout</Button>
     </div> :
@@ -74,3 +80,4 @@ const Home = () => {
 }
 
 export default Home;
+
